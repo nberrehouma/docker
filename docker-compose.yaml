@@ -1,0 +1,40 @@
+version: "2.1"
+
+networks:
+    my-network:
+        external: true
+
+services:
+   ubuntu_m1:
+      image: someguy123/net-tools 
+      stdin_open: true # equivalent of -i
+      tty: true        # equivalent of -t
+      container_name: m1
+      command: bash 
+      
+      networks:
+         - my-network
+      shm_size: "100mb"
+      restart: unless-stopped
+   ubuntu_m2:
+      image: someguy123/net-tools 
+      stdin_open: true # equivalent of -i
+      tty: true        # equivalent of -t
+      container_name: m2
+      command: bash  
+      
+      networks:
+         - my-network
+      shm_size: "100mb"
+      restart: unless-stopped
+   mysql_server:
+      image: mysql
+      command: --default-authentication-plugin=mysql_native_password
+      restart: always
+      container_name: db-server
+      environment:
+         MYSQL_ROOT_PASSWORD: root_password
+      ports:
+        - "3306:3306"
+      networks:
+        - my-network
